@@ -9,10 +9,64 @@ const buttonRain = document.querySelector(".rain");
 const buttonHome = document.querySelector(".home");
 const buttonFire = document.querySelector(".fire");
 
+const forestvol = document.getElementById("forestvolume");
+forestvol.addEventListener("input", (event) => {
+  forestSound.volume = event.target.value;
+});
+
+forestvol.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
+
+const rainvol = document.getElementById("rainvolume");
+rainvol.addEventListener("input", (event) => {
+  rainSound.volume = event.target.value;
+});
+
+rainvol.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
+
+const homevol = document.getElementById("homevolume");
+homevol.addEventListener("input", (event) => {
+  homeSound.volume = event.target.value;
+});
+
+homevol.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
+
+const firevol = document.getElementById("firevolume");
+firevol.addEventListener("input", (event) => {
+  fireSound.volume = event.target.value;
+});
+
+firevol.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
+
+const moonmode = document.querySelector(".moon");
+const sunmode = document.querySelector(".sun");
+const body = document.body;
+
+moonmode.addEventListener("click", () => {
+  body.classList.remove("dark-mode");
+  moonmode.classList.add("hidedarkmode");
+  sunmode.classList.remove("hidedarkmode");
+});
+sunmode.addEventListener("click", () => {
+  body.classList.add("dark-mode");
+  sunmode.classList.add("hidedarkmode");
+
+  moonmode.classList.remove("hidedarkmode");
+});
+
 let timerTimeOut;
 let minutes = Number(minutesDisplay.textContent);
+
 buttonPlay.addEventListener("click", function () {
   buttonPlay.classList.add("hide");
+  buttonPlay.disabled = true;
   buttonStop.classList.remove("hide");
   countdown();
 });
@@ -22,6 +76,7 @@ function reset() {
 }
 
 buttonStop.addEventListener("click", function () {
+  buttonPlay.disabled = false;
   resetControls();
   reset();
 });
@@ -59,7 +114,7 @@ function countdown() {
       --minutes;
     }
 
-    updateDisplay(minutes, String(seconds - 1));
+    secondsDisplay.textContent = seconds - 1;
 
     countdown();
   }, 1000);
@@ -71,6 +126,10 @@ buttonMore.addEventListener("click", function () {
 });
 
 buttonAnyless.addEventListener("click", function () {
+  if (minutes <= 5) {
+    return;
+  }
+
   updateDisplay(minutes - 5);
   minutes = minutes - 5;
 });
@@ -80,58 +139,70 @@ let rainIsActive = false;
 let homeIsActive = false;
 let fireIsActive = false;
 
+//audios
 
 const forestSound = new Audio("./sounds/Floresta.wav");
-const rainSound = new Audio ("./sounds/Chuva.wav")
-const homeSound = new Audio ("./sounds/Cafeteria.wav")
-const fireSound = new Audio ("./sounds/Lareira.wav")
+const rainSound = new Audio("./sounds/Chuva.wav");
+const homeSound = new Audio("./sounds/Cafeteria.wav");
+const fireSound = new Audio("./sounds/Lareira.wav");
 
 buttonForest.addEventListener("click", function () {
-  
   if (forestIsActive) {
     forestIsActive = false;
     buttonForest.classList.remove("color");
-    forestSound.pause()
+    forestSound.pause();
+
+    forestvol.classList.add("hidevolume");
   } else {
     forestIsActive = true;
     buttonForest.classList.add("color");
-    forestSound.play()
+    forestSound.play();
+
+    forestvol.classList.remove("hidevolume");
   }
 });
 
-buttonRain.addEventListener("click", function (){
-  if(rainIsActive) {
+buttonRain.addEventListener("click", function () {
+  if (rainIsActive) {
     rainIsActive = false;
     buttonRain.classList.remove("color");
-    rainSound.pause()
-  }else {
+    rainSound.pause();
+    rainvol.classList.add("hidevolume");
+  } else {
     rainIsActive = true;
-    buttonRain.classList.add("color")
-    rainSound.play()
+    buttonRain.classList.add("color");
+    rainSound.play();
+
+    rainvol.classList.remove("hidevolume");
   }
 });
 
 buttonHome.addEventListener("click", function () {
-  if(homeIsActive) {
+  if (homeIsActive) {
     homeIsActive = false;
-    buttonHome.classList.remove ("color");
-    homeSound.pause()
-  }else {
+    buttonHome.classList.remove("color");
+    homeSound.pause();
+    homevol.classList.add("hidevolume");
+  } else {
     homeIsActive = true;
-    buttonHome.classList.add("color")
-    homeSound.play()
+    buttonHome.classList.add("color");
+    homeSound.play();
+
+    homevol.classList.remove("hidevolume");
   }
-})
+});
 
 buttonFire.addEventListener("click", function () {
-  if(fireIsActive) {
-    fireIsActive = false
-    buttonFire.classList.remove ("color")
-    fireSound.pause()
-  }else {
-    fireIsActive = true
-    buttonFire.classList.add("color")
-    fireSound.play()
-  }
-})
+  if (fireIsActive) {
+    fireIsActive = false;
+    buttonFire.classList.remove("color");
+    fireSound.pause();
+    firevol.classList.add("hidevolume");
+  } else {
+    fireIsActive = true;
+    buttonFire.classList.add("color");
+    fireSound.play();
 
+    firevol.classList.remove("hidevolume");
+  }
+});
